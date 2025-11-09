@@ -1,4 +1,4 @@
-# neuro-research-assistant
+# Nneuroscience Research Agent
 
 A small agentic research assistant project that wires a LangChain-based agent to a web-search tool and a Streamlit UI.
 
