@@ -1,4 +1,14 @@
-# Nneuroscience Research Agent
+---
+title: Neuroscience Research Agent
+emoji: 🧠
+colorFrom: blue
+colorTo: indigo
+sdk: streamlit
+main: app/app.py
+python_version: 3.10
+---
+
+# Neuroscience Research Agent
 
 A small agentic research assistant project that wires a LangChain-based agent to a web-search tool and a Streamlit UI.
 
