@@ -13,18 +13,15 @@ from dotenv import load_dotenv
 
 # sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-try:
-    from tools.tools import tavily_search
-    from agents.agent import get_agent_executor
+from tools.tools import tavily_search
+from agents.agent import get_agent_executor
 
-except ImportError:
-    st.error("Could not import 'get_agent_executor' and tavily_search from agent.py and tools.py")
-    st.stop()
+    # st.error("Could not import 'get_agent_executor' and tavily_search from agent.py and tools.py")
+    # st.stop()
 
-except Exception as e:
-    st.error(f"Error importing from agent.py: {e}")
-    st.stop()
-
+# except Exception as e:
+#     st.error(f"Error importing from agent.py: {e}")
+#     st.stop()
 
 load_dotenv()
 os.environ['TAVILLY_API_KEY'] = str(os.getenv("TAVILLY_API_KEY"))
