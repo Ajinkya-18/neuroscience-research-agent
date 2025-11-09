@@ -4,14 +4,14 @@ import sys
 from langchain_core.messages import HumanMessage, AIMessage
 from dotenv import load_dotenv
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+# sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 try:
     from tools.tools import tavily_search
     from agents.agent import get_agent_executor
 
 except ImportError:
-    st.error("Could not import 'get_agent_executor' and tavily_search from agent.py and tool.py")
+    st.error("Could not import 'get_agent_executor' and tavily_search from agent.py and tools.py")
     st.stop()
 
 except Exception as e:
