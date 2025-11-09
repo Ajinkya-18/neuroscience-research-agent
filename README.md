@@ -5,7 +5,7 @@ colorFrom: blue
 colorTo: indigo
 sdk: streamlit
 main: app.py
-python_version: 3.10 
+python_version: "3.10" 
 
 ---
 
