@@ -18,8 +18,7 @@ This repository contains the minimal components used to construct and run an age
 ## HuggingFace Space
 [Neuroscience Research Agent](https://huggingface.co/spaces/Infernus-18/neuroscience-research-agent)
 
-## 
-Hire me for your Custom AI Agent Project: 
+## Hire me for your Custom AI Agent Project: 
 [Fiverr Link](https://www.fiverr.com/s/ljGkXvg)
 
 ## What’s in this repository
