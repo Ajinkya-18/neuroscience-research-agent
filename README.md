@@ -15,7 +15,12 @@ A small agentic research assistant project that wires a LangChain-based agent to
 
 This repository contains the minimal components used to construct and run an agent backed by Gemini (via the `langchain-google-genai` integration) and a Tavily search tool (via `langchain-tavily`). The project includes a Streamlit app to interact with the agent.
 
-Only functionality that appears in the repository is described below.
+## HuggingFace Space
+[Neuroscience Research Agent](https://huggingface.co/spaces/Infernus-18/neuroscience-research-agent)
+
+## 
+Hire me for your Custom AI Agent Project: 
+[Fiverr Link](https://www.fiverr.com/s/ljGkXvg)
 
 ## What’s in this repository
 
