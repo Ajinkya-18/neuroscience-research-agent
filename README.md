@@ -24,7 +24,7 @@ This repository contains the minimal components used to construct and run an age
 ## What’s in this repository
 
 - `agents/agent.py` — Builds and returns a configured LangChain `AgentExecutor` using:
-  - `ChatGoogleGenerativeAI` (model set to `gemini-2.0-flash`)
+  - `ChatGoogleGenerativeAI` (model set to `gemini-2.5-flash`)
   - A prompt template with a system message and user input placeholder
   - The `tavily_search` tool (imported from `tools.tools`)
   - The agent executor is created with `max_iterations=3` and verbose logging enabled.
