@@ -1,5 +1,5 @@
 ---
-title: Neuroscience Research Agent
+title: Neuroscience Research Assistant
 emoji: 🧠
 colorFrom: blue
 colorTo: indigo
@@ -9,7 +9,7 @@ python_version: "3.10"
 
 ---
 
-# Neuroscience Research Agent
+# Neuroscience Research Assistant
 
 A small agentic research assistant project that wires a LangChain-based agent to a web-search tool and a Streamlit UI.
 
