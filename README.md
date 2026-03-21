@@ -20,20 +20,19 @@ This repository contains the minimal components used to construct and run an age
 
 ## What’s in this repository
 
-- `agents/agent.py` — Builds and returns a configured LangChain `AgentExecutor` using:
-  - `ChatGoogleGenerativeAI` (model set to `gemini-2.5-flash`)
-  - A prompt template with a system message and user input placeholder
+- `agents/agent.py` — Builds and returns a configured LangChain agent using:
+  - `init_chat_model` with `gemini-3.1-pro-preview` from `google_genai`
+  - A system prompt for neuroscience research assistance
   - The `tavily_search` tool (imported from `tools.tools`)
-  - The agent executor is created with `max_iterations=3` and verbose logging enabled.
+  - The agent is created with temperature=0.45.
 
-- `tools/tools.py` — Defines a `tavily_search` tool using `langchain-tavily`:
-  - A small Pydantic model `TavilyInput` describes the tool's inputs (`query`, optional `include_domains`, `exclude_domains`).
-  - A `TavilySearch` instance is created (`max_results=2`) and exposed as a LangChain tool using the `@tool` decorator.
+- `tools/tools.py` — Defines a `tavily_search` tool using `langchain_tavily`:
+  - A `TavilySearch` instance is created with `max_results=5`, `topic="general"`, `search_depth="advanced"`, `include_raw_content=False`, `include_answer=False`.
 
-- `app/app.py` — A Streamlit front-end that:
-  - Loads the agent via `agents.agent.get_agent_executor` (cached with `st.cache_resource`).
-  - Provides a chat UI (`st.chat_input`, `st.chat_message`) to send user prompts to the agent and display responses.
-  - Shows intermediate tool steps (tool name, inputs, outputs) in an expander when available.
+- `app.py` — A Streamlit front-end that:
+  - Imports the agent from `agents.agent`
+  - Provides a chat UI to send user prompts to the agent and display responses.
+  - Streams responses from the agent.
 
 - `requirements.txt` — Lists runtime dependencies observed in the repository:
   - `streamlit`
@@ -41,7 +40,6 @@ This repository contains the minimal components used to construct and run an age
   - `langchain-google-genai`
   - `langchain-tavily`
   - `python-dotenv`
-  - `pydantic<2`
 
 - `LICENSE` — MIT License (copyright 2025 Ajinkya A Tamhankar).
 
@@ -58,7 +56,7 @@ This repository contains the minimal components used to construct and run an age
 1. Create and activate a Python virtual environment.
 2. Install dependencies from `requirements.txt`.
 3. Create a `.env` file (or set environment variables) with the expected API keys.
-4. Run the Streamlit app from the `app` directory.
+4. Run the Streamlit app.
 
 Example (PowerShell):
 
@@ -67,13 +65,12 @@ python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 # create a .env file with TAVILY_API_KEY and GOOGLE_API_KEY (or set environment variables)
-streamlit run app\app.py
+streamlit run app.py
 ```
 
 ## Notes and caveats
 
 - The README only documents code and files present in the repository. It does not claim any hosted service or external infrastructure.
-- There are a couple of inconsistent environment variable spellings in the code (`TAVILY_API_KEY` vs `TAVILLY_API_KEY`) — verify and set both if necessary or edit the code to standardize the name you prefer.
 - The Streamlit UI attempts to import and load the agent and will stop with an error message if imports fail or API keys are missing.
 
 ## License
