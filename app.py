@@ -1,45 +1,24 @@
 import streamlit as st
-import os
-import sys
 from langchain_core.messages import HumanMessage, AIMessage
 from dotenv import load_dotenv
-
-# SCRIPT_PATH = os.path.abspath(__file__)
-# SCRIPT_DIR = os.path.dirname(SCRIPT_PATH)
-# PROJECT_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, '..'))
-
-# if PROJECT_ROOT not in sys.path:
-#     sys.path.insert(0, PROJECT_ROOT)
-
-# sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
-from tools.tools import tavily_search
-from agents.agent import get_agent_executor
-
-    # st.error("Could not import 'get_agent_executor' and tavily_search from agent.py and tools.py")
-    # st.stop()
-
-# except Exception as e:
-#     st.error(f"Error importing from agent.py: {e}")
-#     st.stop()
+import ast
 
 load_dotenv()
-os.environ['TAVILLY_API_KEY'] = str(os.getenv("TAVILLY_API_KEY"))
-os.environ["GOOGLE_API_KEY"] = str(os.getenv("GOOGLE_API_KEY"))
 
+from agents.agent import agent
+
+
+st.set_page_config(page_title="Neuroscience Research Agent", layout='centered')
+st.title("Neuroscience Research Assistant")
+st.caption("A research assistant powered by Gemini and Tavily Search")
 
 @st.cache_resource
 def load_agent():
     """Uses streamlit's cache to load the agent only once. It calls the imported function."""
-    return get_agent_executor()
-
-
-st.set_page_config(page_title="Agentic Search Bot", layout='centered')
-st.title("Agentic Search Bot")
-st.caption("A chatbot powered by Gemini and Tavily Search")
+    return agent
 
 try:
-    agent_executor = load_agent()
+    agent = load_agent()
 
 except Exception as e:
     st.error(f"Failed to load agent: {e}. Check API keys and permissions.")
@@ -60,38 +39,35 @@ if user_prompt := st.chat_input("Ask a question..."):
         st.markdown(user_prompt)
 
     history_messages = []
+
+    def stream_response(prompt):
+        for chunk in agent.stream(
+            input={"messages": history_messages + [HumanMessage(prompt)]}, 
+            stream_mode='messages', 
+            version="v2",
+        ):
+            if chunk["type"] == "messages":
+                token, metadata = chunk["data"]
+                if len(token.content_blocks) > 0:
+                    if token.content_blocks[0]['type'] == 'text' and not token.content_blocks[0]["text"].startswith('{"query":'):
+                        yield token.content_blocks[0]["text"]
+                
+                else:
+                    continue
+    
+
     for msg in st.session_state.messages[:-1]:
         if msg["role"] == "user":
             history_messages.append(HumanMessage(content=msg["content"]))
         elif msg["role"] == "assistant":
             history_messages.append(AIMessage(content=msg["content"]))
 
-    with st.spinner("Agent is thinking..."):
+    with st.spinner("Searching..."):
         try:
-            response = agent_executor.invoke({
-                "user_input": user_prompt,
-                "chat_history": history_messages
-            })
-
-            ai_response = response["output"]
-
-
-            st.session_state.messages.append({"role": "assistant", "content": ai_response})
-
             with st.chat_message("assistant"):
-                st.markdown(ai_response)
+                ai_response = st.write_stream(stream_response(user_prompt))
+                st.session_state.messages.append({"role": "assistant", "content": ai_response})
 
-                steps = response.get("intermediate_steps", [])
-                if steps:
-                    with st.expander("Show Agent's work"):
-                        for step in steps:
-                            action, observation = step
-                            st.markdown(f"**Tool:** '{action.tool}'")
-                            st.markdown("**Tool Input:**")
-                            st.json(action.tool_input)
-                            st.markdown("**Tool Output:**")
-                            st.code(observation, language="json")
-            
 
         except Exception as e:
             st.error(f"An error occurred: {e}")
